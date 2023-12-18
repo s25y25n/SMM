@@ -35,7 +35,7 @@ char* smmObj_getTypeName(int type)
       
 } 
 //1. 구조체 형식 정의 
-
+/*
 typedef struct smmObject {
        
        char name[MAX_CHARNAME];
@@ -45,12 +45,14 @@ typedef struct smmObject {
        int energy; 
        smmObjGrade_e grade;
 } smmObject_t;
-
+*/
 //static int smmObj_noNode = 0 ;
 //static smmObject_t smm_node[MAX_NODE];
 
 //관련함수 변경 
 //object generation
+
+
 void* smmObj_genObject(char* name, smmObjType_e objtype ,int type, int credit, int energy, smmObjGrade_e grade)
 {
     smmObject_t* ptr ;
@@ -70,6 +72,7 @@ void* smmObj_genObject(char* name, smmObjType_e objtype ,int type, int credit, i
    //free(ptr);
    return ptr;
 }
+
 
 char* smmObj_getNodeName(void* obj)
 {
@@ -95,3 +98,8 @@ int smmObj_getNodeEnergy(void* obj)
       return ptr->energy;
 }
 
+int smmObj_getNodeGrade(void* obj)
+{
+    smmObject_t* ptr = (smmObject_t*)obj;
+      return ptr->grade;
+}

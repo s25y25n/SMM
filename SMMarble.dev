@@ -18,7 +18,7 @@ Icon=
 ExeOutput=
 ObjectOutput=
 OverrideOutput=0
-OverrideOutputName=
+OverrideOutputName=SMMarble.exe
 HostApplication=
 Folders=
 CommandLine=
@@ -27,7 +27,7 @@ CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
-CompilerSettings=
+CompilerSettings=0000000000000001000000
 
 [Unit1]
 FileName=smm_common.h
@@ -60,16 +60,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit4]
-FileName=smm_object.c
-CompileCpp=0
-Folder=SMMarble
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit5]
 FileName=smm_object.h
 CompileCpp=0
 Folder=SMMarble
@@ -79,10 +69,20 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit6]
+[Unit5]
 FileName=main.c
 CompileCpp=0
 Folder=SMMarble
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit6]
+FileName=smm_object.c
+CompileCpp=0
+Folder=
 Compile=1
 Link=1
 Priority=1000
