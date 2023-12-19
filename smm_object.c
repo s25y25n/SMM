@@ -15,6 +15,17 @@
 #define MAX_GRADE       9
 #define MAX_NODE        100
 
+void saveGrade(int player, const char *lectureName, smmObjGrade_e grade)
+{
+    // 해당 플레이어의 성적 이력 배열에 저장
+    GradeRecord *record = &gradeHistory[player][gradeHistoryCount[player]];
+    strncpy(record->lectureName, lectureName, MAX_CHARNAME - 1);
+    record->grade = grade;
+
+    // 성적 이력 개수 증가
+    gradeHistoryCount[player]++;
+}
+
 
 
 static char smmNodeName[SMMNODE_TYPE_MAX][MAX_CHARNAME] = //배열의 크기는 맥스캐릭터네임으로 잡음 
@@ -28,6 +39,7 @@ static char smmNodeName[SMMNODE_TYPE_MAX][MAX_CHARNAME] = //배열의 크기는 맥스캐
        "축제시간"
        
 };
+
 
 
 char* smmObj_getRandomGrade(int type) 
@@ -59,18 +71,23 @@ typedef struct smmObject {
 //관련함수 변경 
 //object generation
 
-#if 0
-typedef struct {
-    char name[100]; // 음식 카드의 이름
-    int energy;     // 음식 카드의 에너지
-} FoodCard;
+//FOOD OBJECT 
+
 
 char* smmObj_getFoodName(void* obj)
 {
       FoodCard* ptr = (FoodCard*)obj;
       return ptr->name;
 }
-#endif
+
+int smmObj_getFoodEnergy(void* obj)
+{
+    FoodCard* ptr = (FoodCard*)obj;
+      return ptr->energy;
+}
+
+
+//NODE OBJECT
 
 
 void* smmObj_genObject(char* name, smmObjType_e objtype ,int type, int credit, int energy, smmObjGrade_e grade)

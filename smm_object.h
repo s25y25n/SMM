@@ -25,6 +25,7 @@ typedef struct {
     int energy;     // 음식 카드의 에너지
 } FoodCard;
 
+
 typedef struct {
     char name[100]; 
 } FestivalCard;
@@ -49,6 +50,7 @@ typedef enum smmObjType {
          smmObjType_grade
 }smmObjType_e ;
 
+// 학점 열거형 정의
 typedef enum smmObjGrade {
          smmObjGrade_Ap = 0,
          smmObjGrade_A0,
@@ -85,6 +87,8 @@ smmObjGrade_e getRandomGrade(void);
     festival
 */
 
+//성적을 저장하는 함수  
+void saveGrade(int player, const char *lectureName, smmObjGrade_e grade);
 
 //object generation
 void* smmObj_genObject(char* name, smmObjType_e objtype ,int type, int credit, int energy, smmObjGrade_e grade);
