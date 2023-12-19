@@ -18,6 +18,7 @@
 #define SMMNODE_TYPE_FESTIVAL           6
 
 #define SMMNODE_TYPE_MAX                7
+#define SMMGRADE_MAX                     9
 
 typedef struct {
     char name[100]; // 음식 카드의 이름
@@ -28,6 +29,18 @@ typedef struct {
     char name[100]; 
 } FestivalCard;
 
+
+static char smmGradeName[9][MAX_CHARNAME] = {
+	"A+",
+	"A0",
+	"A-",
+	"B+",
+	"B0",
+	"B-",
+	"C+",
+	"C0",
+	"C-"
+};
 
 
 typedef enum smmObjType {

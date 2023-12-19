@@ -131,9 +131,6 @@ int smmdb_addTail(int list_nr, void* obj)
         ndPtr->next = newNdPtr;
         newNdPtr->prev = ndPtr;
         newNdPtr->index = ndPtr->index+1;
-         // Make the circular connection
-        //newNdPtr->next = list_database[list_nr];
-        //list_database[list_nr]->prev = newNdPtr;
 
     }
     

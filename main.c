@@ -57,12 +57,6 @@ void* findGrade(int player, char *lectureName); //find the grade from the player
 void printGrades(int player); //print all the grade history of the player
 #endif
 
-smmObjGrade_e getRandomGrade(void)
-{ //학점을 랜덤으로 받아오는 함수 
-    srand(time(NULL));
-    int randomIndex = rand() % 8;  
-    return (smmObjGrade_e)randomIndex;
-}
 
 
 
@@ -93,17 +87,43 @@ void printGrades(int player) // 이거 응용해서 들은 과목인지 확인하는 코드도 짜게
      
 }
 
+#if 0
+smmObjGrade_e getRandomGrade(void)
+{ //학점을 랜덤으로 받아오는 함수 
+    srand(time(NULL));
+    int randomIndex = rand() % 8;  
+    return (smmObjGrade_e)randomIndex;
+}
+
+smmObjGrade_e takeLecture(int player, char *lectureName, int credit) 
+{
+    // 성적을 플레이어의 성적 목록에 추가합니다.
+    void *gradePtr = smmObj_genObject(lectureName, smmObjType_grade, 0, credit, 0, randomGrade);
+    smmdb_addTail(LISTNO_OFFSET_GRADE + player, gradePtr);
+
+    // 생성된 랜덤 성적 반환
+    return randomGrade;
+}
+#endif
+
+
+
+
 void printPlayerStatus(void)
 {
      int i;
      
      for (i=0;i<player_nr;i++)
      {
-         printf("====================================\n%s : credit %i, energy %i, position %i\n====================================\n", 
+         void *boardPtr = smmdb_getData(LISTNO_NODE, (cur_player[i].position) % board_nr);
+         
+         printf("==============================================\n%s at %i.%s, credit %i, energy %i\n==============================================\n", 
                       cur_player[i].name,
+                      cur_player[i].position,
+                      smmObj_getNodeName(boardPtr),
                       cur_player[i].accumCredit,
-                      cur_player[i].energy,
-                      cur_player[i].position);
+                      cur_player[i].energy
+                      );
      }
 }
 
@@ -111,7 +131,7 @@ void printPlayerStatus(void)
 
 void generatePlayers(int n, int initEnergy)//generate a new player
 {
-     //n time loop 
+     //n time loop
      int i;
      for(i=0;i<n;i++) {
            
@@ -165,6 +185,7 @@ void actionNode(int player)
         {
                                            
             char choice;
+            int grade = 0;
             int validInput = 0;
 
             while (!validInput)
@@ -177,18 +198,14 @@ void actionNode(int player)
                   // 수강하는 경우
                   printf("You've taken the lecture \"%s\".\n", smmObj_getNodeName(boardPtr));
 
-                 cur_player[player].accumCredit += smmObj_getNodeCredit(boardPtr);
+                  cur_player[player].accumCredit += smmObj_getNodeCredit(boardPtr);
                   cur_player[player].energy -= smmObj_getNodeEnergy(boardPtr);
-
-                  // grade 생성
-                  gradePtr = smmObj_genObject(smmObj_getNodeName(boardPtr), smmObjType_grade, 0, smmObj_getNodeCredit(boardPtr), 0, getRandomGrade());
+                 
+                  grade = rand() % SMMGRADE_MAX;
+                  gradePtr = smmObj_genObject(name, smmObjType_grade, 0, smmObj_getNodeCredit(boardPtr), 0, (smmObjGrade_e)grade);
                   smmdb_addTail(LISTNO_OFFSET_GRADE + player, gradePtr);
-                  /*
-                   grade = rand() % smmObjGrade_max;
-                    gradePtr = smmObj_genObject(name, smmObjType_grade, 0, smmObj_getNodeCredit(boardPtr), 0, (smmObjGrade_e)grade);
-                    smmdb_addTail(LISTNO_OFFSET_GRADE + player, gradePtr);
-                  */
-                  printf("Grade for \"%s\": %d\n", smmObj_getNodeName(boardPtr), smmObj_getNodeGrade(gradePtr));
+              
+                  printf("Grade for \"%s\": %s\n", smmObj_getNodeName(boardPtr), smmGradeName[grade]);
 
                   validInput = 1; // 유효한 입력이므로 반복문 종료
                  }
@@ -297,7 +314,7 @@ void actionNode(int player)
         scanf("%d", &userInput);
 
         FestivalCard *festCard = (FestivalCard *)smmdb_getData(LISTNO_FESTCARD, rand() % festival_nr);
-        
+        printf("%s\n", festCard->name);
         break;
    }
 
@@ -452,9 +469,10 @@ int main(int argc, const char * argv[]) {
     do
     {
         //input player number to player_nr
-            printf("\nHow many people are playing? :\n");
-            scanf("%d", &player_nr);
-            fflush(stdin);
+           printf("\n\n\n*********************************************************************\n=====================================================================\n                          Sookmyung Marble\n\n                          Let's Graduate!!!\n=====================================================================\n*********************************************************************\n\n\n");
+           printf("\nHow many people are playing? :\n");
+           scanf("%d", &player_nr);
+           fflush(stdin);
     } while (player_nr < 0 || player_nr > MAX_PLAYER);
      
      cur_player = (player_t*)malloc(player_nr*sizeof(player_t));

@@ -29,17 +29,6 @@ static char smmNodeName[SMMNODE_TYPE_MAX][MAX_CHARNAME] = //배열의 크기는 맥스캐
        
 };
 
-static char smmGradeName[9][MAX_CHARNAME] = {
-	"A+",
-	"A0",
-	"A-",
-	"B+",
-	"B0",
-	"B-",
-	"C+",
-	"C0",
-	"C-"
-};
 
 char* smmObj_getRandomGrade(int type) 
 {
