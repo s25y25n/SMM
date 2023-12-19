@@ -29,6 +29,24 @@ static char smmNodeName[SMMNODE_TYPE_MAX][MAX_CHARNAME] = //배열의 크기는 맥스캐
        
 };
 
+static char smmGradeName[9][MAX_CHARNAME] = {
+	"A+",
+	"A0",
+	"A-",
+	"B+",
+	"B0",
+	"B-",
+	"C+",
+	"C0",
+	"C-"
+};
+
+char* smmObj_getRandomGrade(int type) 
+{
+      return (char*)smmGradeName[type];
+      
+} 
+
 char* smmObj_getTypeName(int type) 
 {
       return (char*)smmNodeName[type];
@@ -52,6 +70,19 @@ typedef struct smmObject {
 //관련함수 변경 
 //object generation
 
+#if 0
+typedef struct {
+    char name[100]; // 음식 카드의 이름
+    int energy;     // 음식 카드의 에너지
+} FoodCard;
+
+char* smmObj_getFoodName(void* obj)
+{
+      FoodCard* ptr = (FoodCard*)obj;
+      return ptr->name;
+}
+#endif
+
 
 void* smmObj_genObject(char* name, smmObjType_e objtype ,int type, int credit, int energy, smmObjGrade_e grade)
 {
@@ -72,7 +103,6 @@ void* smmObj_genObject(char* name, smmObjType_e objtype ,int type, int credit, i
    //free(ptr);
    return ptr;
 }
-
 
 char* smmObj_getNodeName(void* obj)
 {

@@ -73,20 +73,6 @@ smmObjGrade_e getRandomGrade(void);
 */
 
 
-/* grade :
-    A+,
-    A0,
-    A-,
-    B+,
-    B0,
-    B-,
-    C+,
-    C0,
-    C-
-*/
-
-
-
 //object generation
 void* smmObj_genObject(char* name, smmObjType_e objtype ,int type, int credit, int energy, smmObjGrade_e grade);
 
