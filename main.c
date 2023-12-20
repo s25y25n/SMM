@@ -78,31 +78,20 @@ int isLectureTaken(int player, const char* lectureName)
 
 
 float calcAverageGrade(int player) {
-    int i;
-    float totalGrade = 0.0;
-    int totalCredits = 0;
+     int i; 
+     float totalGrade = 0.0;
+     int numGrades = smmdb_len(LISTNO_OFFSET_GRADE + player);
 
-    // 수강한 모든 과목에 대해 반복
-    for (i = 0; i < smmdb_len(LISTNO_OFFSET_GRADE + player); i++) {
-        // 현재 수강한 과목의 성적 정보를 얻어옴
+     for (i=0;i<numGrades;i++)
+      {
         void *gradePtr = smmdb_getData(LISTNO_OFFSET_GRADE + player, i);
+        int gradeIndex = smmObj_getNodeGrade(gradePtr);
 
-        // 과목의 학점 및 성적을 얻어옴
-        int credit = smmObj_getNodeCredit(gradePtr);
-        int grade = smmObj_getNodeGrade(gradePtr);
 
-        // 현재까지의 총 학점과 총 성적을 업데이트
-        totalCredits += credit;
-        totalGrade += credit * grade;
-    }
+        totalGrade += smmGradeValue[gradeIndex];
+       }
 
-    // 수강한 과목이 없으면 평균 점수는 0으로 처리
-    if (totalCredits == 0) {
-        return 0.0;
-    }
-
-    // 평균 점수 계산 및 반환
-    return totalGrade / totalCredits;
+    return (numGrades > 0) ? (totalGrade / numGrades) : 0.0;
 }
 
 
@@ -122,17 +111,23 @@ int isGraduated(void) //플레이어가 졸업 조건을 충족했는지를 확인하는 함수
 }
 
 
-void printGrades(int player) // 이거 응용해서 들은 과목인지 확인하는 코드도 짜게 될 것. 
-{
-     int i;
-     void *gradePtr;
-      // 해당 플레이어의 성적 이력을 순회하며 출력
-     for (i=0;i<smmdb_len(LISTNO_OFFSET_GRADE + player);i++)
-     {
-         gradePtr = smmdb_getData(LISTNO_OFFSET_GRADE + player, i);
-         printf("%s : %i\n",smmObj_getNodeName(gradePtr),smmObj_getNodeGrade(gradePtr));
-     }
-     
+void printGrades(int player)
+{    
+    int i; 
+    int gradeCount = smmdb_len(LISTNO_OFFSET_GRADE + player);
+
+    if (gradeCount == 0)
+    {
+        printf("수강한 강의가 없습니다.\n");
+        return;  // 강의가 없으면 더 이상 진행하지 않고 함수를 종료합니다.
+    }
+
+    for (i = 0; i < gradeCount; i++)
+    {
+        void *gradePtr = smmdb_getData(LISTNO_OFFSET_GRADE + player, i);
+        printf("%s : %f\n",smmObj_getNodeName(gradePtr),smmGradeValue[smmObj_getNodeGrade(gradePtr)]);
+    }
+     printf(" average : %f\n",calcAverageGrade(player) );
 }
  /*
 smmObjGrade_e takeLecture(int player, char *lectureName, int credit) 
@@ -201,7 +196,7 @@ int rolldie(int player) //주사위 값을 출력하고, 'g'를 누르면 플레이어의 성적을 �
     fflush(stdin);
     
 
-    if (c == 'g')
+    if (c == 'g' || c == 'G')
         printGrades(player);
 
     
@@ -269,7 +264,7 @@ void actionNode(int player)
                   lectureObj = smmObj_genObject(name, 0, 0, smmObj_getNodeCredit(boardPtr), 0, (smmObjGrade_e)grade);
                   smmdb_addTail(LISTNO_OFFSET_GRADE + player, gradePtr);
                   */
-                  printf("Grade for \"%s\": %s\n", smmObj_getNodeName(boardPtr),smmGradeName[grade]);
+                  printf("Grade for \"%s\": %s (%f)\n", smmObj_getNodeName(boardPtr),smmGradeName[grade],smmGradeValue[grade]);
 
                   validInput = 1; // 유효한 입력이므로 반복문 종료
                  }
@@ -379,7 +374,7 @@ void actionNode(int player)
      
     case SMMNODE_TYPE_FESTIVAL:
    {
-        printf("You've reached a festival! Enter any number to draw a festival card: ");
+        printf("You've reached a festival! Press any key to draw a festival card: ");
         int userInput;
         scanf("%d", &userInput);
         //축제카드뽑기  
@@ -541,7 +536,7 @@ int main(int argc, const char * argv[]) {
     for (j = 0; j<food_nr; j++)
 {
     FoodCard *foodCard = (FoodCard *)smmdb_getData(LISTNO_FOODCARD, j);
-    printf("%i. name: %s, energy: %i\n", j, foodCard->name, foodCard->energy);
+    printf("%i. name: %s, energy: %i\n", j, smmObj_getFoodName(foodCard), smmObj_getFoodEnergy(foodCard));
 }
     
     //3. festival card config 
@@ -566,7 +561,7 @@ int main(int argc, const char * argv[]) {
    for (k = 0; k<festival_nr; k++)
 {
     FestivalCard *festCard = (FestivalCard *)smmdb_getData(LISTNO_FESTCARD, k);
-    printf("%i. %s\n ", k, festCard->name);
+    printf("%i. %s\n ", k, smmObj_getFestName(festCard));
 }
    
 

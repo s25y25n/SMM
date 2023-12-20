@@ -43,6 +43,18 @@ static char smmGradeName[9][MAX_CHARNAME] = {
 	"C-"
 };
 
+static float smmGradeValue[9] = {
+    4.3,
+    4.0,
+    3.7,
+    3.3,
+    3.0,
+    2.7,
+    2.3,
+    2.0,
+    1.7
+};
+
 
 typedef enum smmObjType {
          smmObjType_board = 0,
